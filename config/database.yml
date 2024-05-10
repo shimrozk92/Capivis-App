@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: ror
+  password: 1234
+  host: localhost
+
+development:
+  <<: *default
+  database: capivis_development
+  username: ror
+  password: 1234
+
+test:
+  <<: *default
+  database: capivis_test
+
+production:
+  <<: *default
+  database: capivis_production
