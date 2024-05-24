@@ -1,0 +1,153 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+- BearerAuth: []
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: example.com
+paths:
+  "/api/v1/home":
+    get:
+      summary: list homes
+      responses:
+        '200':
+          description: successful
+  "/api/v1/users/signup":
+    post:
+      summary: create registration
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    name:
+                      type: string
+                    role:
+                      type: integer
+              required:
+              - email
+              - password
+              - name
+              - role
+  "/api/v1/users/login":
+    post:
+      summary: create session
+      tags:
+      - LOGIN
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: admin007@gmail.com
+                    password:
+                      type: string
+                      example: password
+              required:
+              - email
+              - password
+        required: true
+  "/api/v1/users/logout":
+    delete:
+      summary: delete session
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Bearer token received upon successful login
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful
+  "/api/v1/users/request_new_password":
+    post:
+      summary: request_new_password session
+      tags:
+      - PASSWORD
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin007@gmail.com
+              required:
+              - email
+        required: true
+  "/api/v1/users/set_new_password":
+    post:
+      summary: set_new_password session
+      tags:
+      - PASSWORD
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin007@gmail.com
+                token:
+                  type: string
+                  example: ioJN8HVRAR8VELqfP6aC
+                password:
+                  type: string
+                  example: new_password
+                password_confirmation:
+                  type: string
+                  example: new_password
+              required:
+              - email
+              - token
+              - password
+              - password_confirmation
+        required: true
