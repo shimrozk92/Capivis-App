@@ -24,7 +24,6 @@ class User < ApplicationRecord
     save(validate: false) # Skip validations
   end
 
-
   def valid_otp?(otp)
     otp == otp
   end

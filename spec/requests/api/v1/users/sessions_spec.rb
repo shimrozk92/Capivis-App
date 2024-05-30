@@ -94,11 +94,12 @@ RSpec.describe '/api/v1/users/sessions', type: :request do
       parameter name: :new_password_params, in: :body, required: true, schema: {
         type: :object,
         properties: {
+          email: { type: :string, example: 'admin007@gmail.com' },
           token: { type: :string, example: 'ioJN8HVRAR8VELqfP6aC' },
           password: { type: :string, example: 'new_password' },
           password_confirmation: { type: :string, example: 'new_password' }
         },
-        required: %w[token password password_confirmation]
+        required: %w[email token password password_confirmation]
       }
 
       response(200, 'successful') do

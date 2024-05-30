@@ -1,6 +1,11 @@
+# frozen_string_literal: true
+
+# This class represents the RegistrationsController for API version 1
+
 module Api
   module V1
     module Users
+      # Controller for user registrations.
       class RegistrationsController < Devise::RegistrationsController
         respond_to :json
 
