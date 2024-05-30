@@ -30,8 +30,6 @@ paths:
   "/api/v1/users/signup":
     post:
       summary: create registration
-      tags:
-      - User Registrations
       parameters: []
       responses:
         '200':
@@ -53,12 +51,11 @@ paths:
                       type: string
                     role:
                       type: integer
-                  required:
-                  - email
-                  - password
-                  - name
-                  - role
-              required: true
+              required:
+              - email
+              - password
+              - name
+              - role
   "/api/v1/users/login":
     post:
       summary: create session
@@ -136,6 +133,9 @@ paths:
             schema:
               type: object
               properties:
+                email:
+                  type: string
+                  example: admin007@gmail.com
                 token:
                   type: string
                   example: ioJN8HVRAR8VELqfP6aC
@@ -146,6 +146,7 @@ paths:
                   type: string
                   example: new_password
               required:
+              - email
               - token
               - password
               - password_confirmation

@@ -2,6 +2,8 @@
 
 # This class represents the SessionsController for API version 1
 
+require 'securerandom'
+
 module Api
   module V1
     module Users
@@ -12,33 +14,49 @@ module Api
         def request_new_password
           user = User.find_by(email: params[:email])
           if user
-            reset_token = user.send_reset_password_instructions
-            render json: { success: true, message: 'Password reset instructions sent to your email.' , reset_token: reset_token}, status: :ok
+            otp = generate_otp
+            send_otp_to_user(otp, user)
+            user.update(otp: otp)
+          else
+            render json: { success: false, error: 'User not found.' }, status: :not_found
+            return
+          end
+        end
+
+        def set_new_password
+          user = User.find_by(email: params[:email])
+          if user
+            if user.valid_otp?(otp: params[:otp])
+              if user.reset_password_without_validation(params[:password], params[:password_confirmation])
+                render json: { success: true, message: 'Password has been reset successfully.' }, status: :ok
+              else
+                render json: { success: false, errors: user.errors.full_messages }, status: :unprocessable_entity
+              end
+            else
+              render json: { success: false, error: 'Invalid OTP.' }, status: :unprocessable_entity
+            end
           else
             render json: { success: false, error: 'User not found.' }, status: :not_found
           end
         end
 
-        def set_new_password
-          user = User.with_reset_password_token(params[:token])
-          if user
-            if user.reset_password(params[:password], params[:password_confirmation])
-              render json: { success: true, message: 'Password has been reset successfully.' }, status: :ok
-            else
-              render json: { success: false, errors: user.errors.full_messages }, status: :unprocessable_entity
-            end
-          else
-            render json: { success: false, error: 'Invalid or expired password reset token.' }, status: :not_found
-          end
+        private
+
+        def generate_otp
+          SecureRandom.random_number(1000..9999).to_s.rjust(4, '0')
         end
 
-        private
+        def send_otp_to_user(otp, user)
+          puts "Generated OTP for #{user.email}: #{otp}"
+
+          render json: { success: true, message: 'OTP sent succesfully', otp: otp }, status: :ok
+        end
 
         def respond_with(current_user, _opts = {})
           render json: {
             status: {
               code: 200, message: 'Logged in successfully.',
-              data: { user: UserSerializer.new(current_user).serializable_hash[:data][:attributes] }
+              data: { user: LoginUserSerializer.new(current_user).serializable_hash[:data][:attributes] }
             }
           }, status: :ok
         end
