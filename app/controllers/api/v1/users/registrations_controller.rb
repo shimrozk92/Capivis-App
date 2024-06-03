@@ -12,15 +12,6 @@ module Api
         private
 
         # rubocop:disable Metrics/MethodLength
-        # Permit additional parameters for sign up
-        def sign_up_params
-          params.require(:user).permit(
-            :email, :password, :password_confirmation, :first_name, :last_name, :middle_name,
-            :birthdate, :gender, :zipcode, :phone_number, :alternate_phone_number, :city,
-            :state, :country, :arrival_datetime, :address_line_1, :address_line_2, :language, document: []
-          )
-        end
-
         def respond_with(current_user, _opts = {})
           if resource.persisted?
             render json: {
@@ -35,8 +26,8 @@ module Api
             }, status: :unprocessable_entity
           end
         end
+        # rubocop:enable Metrics/MethodLength
       end
-      # rubocop:enable Metrics/MethodLength
     end
   end
 end
