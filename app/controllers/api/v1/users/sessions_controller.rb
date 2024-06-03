@@ -12,27 +12,38 @@ module Api
         def request_new_password
           user = User.find_by(email: params[:email])
           if user
-            reset_token = user.send_reset_password_instructions
-            render json: { success: true, message: 'Password reset instructions sent to your email.' , reset_token: reset_token}, status: :ok
+            otp = generate_otp
+            send_otp_to_user(otp, user)
+            user.update(otp: otp)
+            render json: { success: true, message: 'Password reset instructions sent to your email.', otp: otp }, status: :ok
           else
             render json: { success: false, error: 'User not found.' }, status: :not_found
           end
         end
 
         def set_new_password
-          user = User.with_reset_password_token(params[:token])
+          user = User.find_by(email: params[:email])
           if user
             if user.reset_password(params[:password], params[:password_confirmation])
               render json: { success: true, message: 'Password has been reset successfully.' }, status: :ok
             else
-              render json: { success: false, errors: user.errors.full_messages }, status: :unprocessable_entity
+              render json: { success: false, error: 'Invalid OTP.' }, status: :unprocessable_entity
             end
           else
-            render json: { success: false, error: 'Invalid or expired password reset token.' }, status: :not_found
+            render json: { success: false, error: 'User not found or invalid otp.' }, status: :not_found
           end
         end
 
         private
+
+        def generate_otp
+          SecureRandom.random_number(1000..9999).to_s.rjust(4, '0')
+        end
+
+        def send_otp_to_user(otp, user)
+          puts "Generated OTP for #{user.email}: #{otp}"
+          # Don't render here, just output to console
+        end
 
         def respond_with(current_user, _opts = {})
           render json: {
