@@ -28,41 +28,42 @@ RSpec.describe Api::V1::Users::SessionsController, type: :controller do
     end
   end
 
-  describe 'PUT #set_new_password' do
-    let(:user) { create(:user) }
-    let(:token) { user.send_reset_password_instructions }
+  describe 'POST #set_new_password' do
+  let(:user) { create(:user) }
+  let(:token) { user.send_reset_password_instructions }
 
-    context 'with valid token and password' do
-      it 'resets password successfully' do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        put :set_new_password, params: { token:, password: 'newpassword', password_confirmation: 'newpassword' }
-        expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)).to include('success' => true,
-                                                     'message' => 'Password has been reset successfully.')
-      end
-    end
+  before do
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+  end
 
-    context 'with invalid or expired token' do
-      it 'returns not found error' do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        put :set_new_password,
-            params: { token: 'invalidtoken', password: 'newpassword', password_confirmation: 'newpassword' }
-        expect(response).to have_http_status(:not_found)
-        expect(JSON.parse(response.body)).to include('success' => false,
-                                                     'error' => 'Invalid or expired password reset token.')
-      end
-    end
-
-    context 'with password confirmation mismatch' do
-      it 'returns unprocessable entity error' do
-        @request.env['devise.mapping'] = Devise.mappings[:user]
-        put :set_new_password, params: { token:, password: 'newpassword', password_confirmation: 'mismatch' }
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)).to include('success' => false)
-        expect(JSON.parse(response.body)['errors']).to include("Password confirmation doesn't match Password")
-      end
+  context 'with valid token and password' do
+    it 'resets password successfully' do
+      post :set_new_password, params: { email: user.email, password: 'newpassword', password_confirmation: 'newpassword' }
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to include('success' => true,
+                                                   'message' => 'Password has been reset successfully.')
     end
   end
+
+  context 'with invalid or expired token' do
+    it 'returns not found error' do
+      post :set_new_password, params: { email: 'invalid@example.com', password: 'newpassword', password_confirmation: 'newpassword' }
+      expect(response).to have_http_status(:not_found)
+      expect(JSON.parse(response.body)).to include('success' => false,
+                                                   'error' => 'User not found or invalid otp.')
+    end
+  end
+
+  context 'with password confirmation mismatch' do
+    it 'returns unprocessable entity error' do
+      post :set_new_password, params: { email: user.email, password: 'newpassword', password_confirmation: 'mismatch' }
+      expect(response).to have_http_status(:unprocessable_entity)
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response).to include('success' => false)
+      expect(parsed_response['errors']).to include("Password confirmation doesn't match Password")
+    end
+  end
+end
 
   describe 'DELETE #destroy' do
     let(:user) { create(:user) }

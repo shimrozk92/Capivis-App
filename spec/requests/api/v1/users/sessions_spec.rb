@@ -95,11 +95,11 @@ RSpec.describe '/api/v1/users/sessions', type: :request do
         type: :object,
         properties: {
           email: { type: :string, example: 'admin007@gmail.com' },
-          token: { type: :string, example: 'ioJN8HVRAR8VELqfP6aC' },
+          otp: { type: :integer, example: '1234' },
           password: { type: :string, example: 'new_password' },
           password_confirmation: { type: :string, example: 'new_password' }
         },
-        required: %w[email token password password_confirmation]
+        required: %w[email otp password password_confirmation]
       }
 
       response(200, 'successful') do

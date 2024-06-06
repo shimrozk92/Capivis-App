@@ -27,7 +27,7 @@ module Api
             if user.reset_password(params[:password], params[:password_confirmation])
               render json: { success: true, message: 'Password has been reset successfully.' }, status: :ok
             else
-              render json: { success: false, error: 'Invalid OTP.' }, status: :unprocessable_entity
+              render json: { success: false, errors: user.errors.full_messages }, status: :unprocessable_entity
             end
           else
             render json: { success: false, error: 'User not found or invalid otp.' }, status: :not_found

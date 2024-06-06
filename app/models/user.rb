@@ -8,7 +8,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable, :recoverable, :validatable, :jwt_authenticatable,
          jwt_revocation_strategy: self
-  enum role: { user: 0, admin: 1, hr: 2 }
+  enum role: { donor: 0, admin: 1, hr: 2 }
 
   def valid_otp?(otp)
     otp == otp
