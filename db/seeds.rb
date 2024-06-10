@@ -9,3 +9,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+# db/seeds.rb
+
+FraudAddressData.create([
+  { address: '123 Fake St', city: 'Springfield', state: 'IL', zip_code: '62704' },
+  { address: '456 Elm St', city: 'Shelbyville', state: 'IL', zip_code: '62565' },
+  # Add more entries as needed
+])

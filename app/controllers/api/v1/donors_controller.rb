@@ -16,7 +16,8 @@ module Api
 			def create
 				@donor = Donor.new(donor_params)
 				if @donor.save
-					render json: @donor, status: :created
+					response = { donor: @donor, potential_fraud: @donor.potential_fraud }
+					render json: response, status: :created
 				else
 					render json: @donor.errors, status: :unprocessable_entity
 				end
