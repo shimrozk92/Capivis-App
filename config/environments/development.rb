@@ -10,6 +10,7 @@ def configure_generators(config)
 end
 require 'active_support/core_ext/integer/time'
 Rails.application.configure do
+  config.hosts << "newapp.shadbox.com"
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time
