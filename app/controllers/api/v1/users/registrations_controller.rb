@@ -9,7 +9,13 @@ module Api
       class RegistrationsController < Devise::RegistrationsController
         respond_to :json
 
+        before_action :configure_permitted_parameters, if: :devise_controller?
+
         private
+
+        def configure_permitted_parameters
+          devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :role])
+        end
 
         # rubocop:disable Metrics/MethodLength
         def respond_with(current_user, _opts = {})

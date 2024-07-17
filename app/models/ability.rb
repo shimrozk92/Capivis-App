@@ -10,11 +10,15 @@ class Ability
     return unless user
 
     if user.admin?
-      admin_ability(user)
-    elsif user.hr?
-      hr_ability(user)
-    elsif user.user?
-      user_ability(user)
+      can :manage, :all
+    elsif user.oprator?
+      can :manage, DonorScreening
+      can :manage, Donor
+    elsif user.donor?
+      can :manage, Donor
+      can :read, DonorHandbook
+    else
+      can :read, :all
     end
   end
 

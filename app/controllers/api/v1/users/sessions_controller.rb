@@ -56,22 +56,16 @@ module Api
 
         # rubocop:disable Metrics/MethodLength
         def respond_to_on_destroy
+          jwt_secret_key = ENV['DEVISE_JWT_SECRET_KEY']
           if request.headers['Authorization'].present?
-            jwt_payload = JWT.decode(request.headers['Authorization'].split(' ').last,
-                                     ENV['DEVISE_JWT_SECRET_KEY']).first
+            jwt_payload = JWT.decode(request.headers['Authorization'].split(' ').last,ENV['DEVISE_JWT_SECRET_KEY']).first
             current_user = User.find(jwt_payload['sub'])
           end
 
           if current_user
-            render json: {
-              status: 200,
-              message: 'Logged out successfully.'
-            }, status: :ok
+            render json: { status: 200, message: 'Logged out successfully.' }, status: :ok
           else
-            render json: {
-              status: 401,
-              message: "Couldn't find an active session."
-            }, status: :unauthorized
+            render json: { status: 401, message: "Couldn't find an active session." }, status: :unauthorized
           end
         end
         # rubocop:enable Metrics/MethodLength
