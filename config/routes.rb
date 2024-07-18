@@ -38,6 +38,7 @@ Rails.application.routes.draw do
           post :register
           post :accept
         end
+      resources :donor_screenings
       end
       resources :donor_physical_exams, only: [:index, :create, :show, :update, :destroy]
       resources :donor_handbooks
