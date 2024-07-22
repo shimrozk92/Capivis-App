@@ -33,19 +33,24 @@ Rails.application.routes.draw do
       resources :users
       resources :operators
       get 'donors_list', to: 'operators#donors_list'
+      resources :centers, only: [:index]
       resources :donors do
         member do
           post :register
           post :accept
         end
-      resources :donor_screenings
+        resources :donor_screenings
+        resources :donor_questionnaires, only: [:index, :show, :create, :update, :destroy]
+        resources :donor_questionnaire_forms do
+          resources :questionnaire_form_fields, only: [:index, :show, :create, :update, :destroy]
+        end
       end
       resources :donor_physical_exams, only: [:index, :create, :show, :update, :destroy]
       resources :donor_handbooks
-      resources :donor_questionnaire_forms do
-        resources :questionnaire_form_fields, only: [:index, :show, :create, :update, :destroy]
-      end
-      resources :donor_questionnaires, only: [:index, :show, :create, :update, :destroy]
+      # resources :donor_questionnaire_forms do
+      #   resources :questionnaire_form_fields, only: [:index, :show, :create, :update, :destroy]
+      # end
+      # resources :donor_questionnaires, only: [:index, :show, :create, :update, :destroy]
     end
   end
    resources :fraud_address_data
