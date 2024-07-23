@@ -15,7 +15,7 @@ module Api
       end
 
       def create
-        @donor_screening = @donor.donor_screening.new(donor_screening_params)
+        @donor_screening = @donor.donor_screenings.new(donor_screening_params)
 
         if valid_screening?(@donor_screening)
           @donor_screening.status = "accepted"
@@ -25,13 +25,7 @@ module Api
             render json: @donor_screening.errors, status: :unprocessable_entity
           end
         else
-          @donor_screening.status = "out_of_limits"
-          if @donor_screening.save
-            @donor.destroy
-            render json: @donor_screening, status: :unprocessable_entity
-          else
-            render json: @donor_screening.errors, status: :unprocessable_entity
-          end
+          handle_out_of_limits(@donor_screening)
         end
       end
 
@@ -73,12 +67,41 @@ module Api
       end
 
       def valid_screening?(screening)
-        screening.acceptable_arm_check &&
-          screening.donor_weight.to_f.between?(110, 400) &&
-          screening.donor_blood_pressure.to_i.between?(90, 180) &&
-          screening.donor_temperature.to_f.between?(96.0, 99.5) &&
-          screening.hematocrit.to_i.between?(38, 54) &&
-          screening.total_protein.to_f.between?(6.0, 9.0)
+        valid = true
+        valid &= screening.acceptable_arm_check
+        valid &= screening.donor_weight.to_f.between?(110, 400)
+        valid &= screening.donor_temperature.to_f.between?(96.0, 99.5)
+        valid &= screening.hematocrit.to_i.between?(38, 54)
+        valid &= screening.total_protein.to_f.between?(6.0, 9.0)
+        valid
+      end
+
+      def handle_out_of_limits(screening)
+        if !screening.donor_weight.to_f.between?(110, 400)
+          @donor_screening.status = "deferred"
+          @donor_screening.save
+          render json: { error: "Donor out of weight limits" }, status: :unprocessable_entity
+        elsif !screening.donor_temperature.to_f.between?(96.0, 99.5)
+          @donor_screening.status = "deferred"
+          @donor_screening.save
+          render json: { error: "Donor out of temperature limits" }, status: :unprocessable_entity
+        elsif !screening.hematocrit.to_i.between?(38, 54)
+          @donor_screening.status = "deferred"
+          @donor_screening.save
+          render json: { error: "Donor out of hematocrit limits" }, status: :unprocessable_entity
+        elsif !screening.total_protein.to_f.between?(6.0, 9.0)
+          @donor_screening.status = "deferred"
+          @donor_screening.save
+          render json: { error: "Donor out of total protein limits" }, status: :unprocessable_entity
+        elsif !screening.donor_blood_pressure.to_i.between?(90, 180)
+          @donor_screening.status = "requires_retake"
+          @donor_screening.save
+          render json: { warning: "Donor blood pressure requires retake" }, status: :accepted
+        else
+          @donor_screening.status = "out_of_limits"
+          @donor_screening.save
+          render json: { error: "Donor out of limits" }, status: :unprocessable_entity
+        end
       end
     end
   end
