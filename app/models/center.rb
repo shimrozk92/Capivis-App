@@ -4,6 +4,5 @@ class Center < ApplicationRecord
   has_many :donations
   has_many :operators
   has_one :donor_handbook
-  has_one :admin
   has_one :manager
 end

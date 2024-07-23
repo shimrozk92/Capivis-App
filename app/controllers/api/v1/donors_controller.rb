@@ -1,7 +1,6 @@
 module Api
   module V1
     class DonorsController < ApplicationController
-      before_action :authenticate_user!
       before_action :set_donor, only: [:show, :update, :destroy, :register, :accept]
       load_and_authorize_resource
 
@@ -38,6 +37,8 @@ module Api
       end
 
       def register
+        @donor = current_user.profileable
+
         if @donor.update(register_params)
           if @donor.valid?(context: :register)
             render json: @donor, status: :ok
@@ -66,7 +67,7 @@ module Api
       end
 
       def register_params
-        params.require(:donor).permit(:middle_name, :zipcode, :alternate_phone_number, :address_line_1, :address_line_2, :document, :arrival_datetime, :potential_fraud, :ethnicity, :identification, :finger_print, :photo, :ref_status, :payment_card, :status, :ssn_id)
+        params.require(:donor).permit(:middle_name,:gender, :zipcode, :alternate_phone_number, :address_line_1, :address_line_2, :document, :arrival_datetime, :potential_fraud, :ethnicity, :identification, :finger_print, :photo, :ref_status, :payment_card, :status, :ssn_id)
       end
     end
   end
