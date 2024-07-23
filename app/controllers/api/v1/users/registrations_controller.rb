@@ -22,7 +22,7 @@ module Api
         private
 
         def configure_permitted_parameters
-          devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :ssn_id, :role, :profileable_type] )
+          devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :address_line_1, :profileable_type] )
         end
 
         # rubocop:disable Metrics/MethodLength
