@@ -6,7 +6,7 @@ module Api
 
       def index
         @donors = Donor.all
-        render json: @donor.attributes.merge(user_fields), status: :ok
+        render json: @donors
       end
 
       def show
@@ -41,6 +41,7 @@ module Api
 
         if @donor.update(register_params)
           if @donor.valid?(context: :register)
+            DonorMailer.registration_confirmation(@donor).deliver_now
             render json: @donor.attributes.merge(user_fields), status: :ok
           else
             render json: @donor.errors, status: :unprocessable_entity
