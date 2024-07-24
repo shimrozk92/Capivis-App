@@ -6,11 +6,11 @@ module Api
 
       def index
         @donors = Donor.all
-        render json: @donors
+        render json: @donor.attributes.merge(user_fields), status: :ok
       end
 
       def show
-        render json: @donor
+        render json: @donor.attributes.merge(user_fields), status: :ok
       end
 
       def create
@@ -41,7 +41,7 @@ module Api
 
         if @donor.update(register_params)
           if @donor.valid?(context: :register)
-            render json: @donor, status: :ok
+            render json: @donor.attributes.merge(user_fields), status: :ok
           else
             render json: @donor.errors, status: :unprocessable_entity
           end
@@ -67,7 +67,11 @@ module Api
       end
 
       def register_params
-        params.require(:donor).permit(:middle_name,:gender, :zipcode, :alternate_phone_number, :address_line_1, :address_line_2, :document, :arrival_datetime, :potential_fraud, :ethnicity, :identification, :finger_print, :photo, :ref_status, :payment_card, :status, :ssn_id)
+        params.require(:donor).permit(:middle_name, :gender, :zipcode, :alternate_phone_number, :address_line_1, :address_line_2, :document, :arrival_datetime, :potential_fraud, :ethnicity, :identification, :finger_print, :photo, :ref_status, :payment_card, :status, :ssn_id)
+      end
+
+      def user_fields
+        current_user.slice(:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :birthdate, :address_line_1)
       end
     end
   end
