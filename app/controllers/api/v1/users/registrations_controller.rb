@@ -44,7 +44,7 @@ module Api
 
         def create_profileable(user)
           profileable_type = params[:user][:profileable_type]
-          profileable_params = params.require(:profileable).permit(:address_line_2, :photo, :gender)
+          profileable_params = params.require(:profileable).permit(:document, :ref_status)
 
           profileable_class = profileable_type.constantize
           profileable = profileable_class.new(profileable_params)

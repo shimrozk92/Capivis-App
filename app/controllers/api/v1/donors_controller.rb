@@ -5,8 +5,9 @@ module Api
       load_and_authorize_resource
 
       def index
-        @donors = Donor.all
-        render json: @donors
+        @donors = Donor.includes(:user).all
+
+        render json: @donors.as_json(include: { user: { only: [:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :address_line_1, :photo, :birthdate] } })
       end
 
       def show
@@ -37,6 +38,7 @@ module Api
       end
 
       def register
+        debugger
         @donor = current_user.profileable
 
         if @donor.update(register_params)
@@ -68,11 +70,11 @@ module Api
       end
 
       def register_params
-        params.require(:donor).permit(:middle_name, :gender, :zipcode, :alternate_phone_number, :address_line_1, :address_line_2, :document, :arrival_datetime, :potential_fraud, :ethnicity, :identification, :finger_print, :photo, :ref_status, :payment_card, :status, :ssn_id)
+        params.require(:donor).permit(:middle_name, :gender, :zipcode, :alternate_phone_number, :address_line_1, :address_line_2, :document, :arrival_datetime, :potential_fraud, :ethnicity, :identification, :finger_print, :photo, :ref_status, :payment_card, :status, :ssn_id, :alternate_email, :language)
       end
 
       def user_fields
-        current_user.slice(:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :birthdate, :address_line_1)
+        current_user.slice(:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :birthdate, :address_line_1, :photo)
       end
     end
   end

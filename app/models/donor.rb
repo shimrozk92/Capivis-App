@@ -6,8 +6,8 @@ class Donor < ApplicationRecord
   has_many :donor_screenings, dependent: :destroy
   has_many :donations
   has_many :donation_cancellation
-
-  validates :address_line_2, :photo, :gender, presence: true
+  validates :ref_status, :document, presence: true
+  validates :address_line_2, :photo, :gender, presence: true, on: :register
   validate :check_potential_fraud
   before_validation :check_for_fraudulent_address
 
