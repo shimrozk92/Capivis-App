@@ -57,3 +57,4 @@ gem 'multi_json'
 gem 'rspec-rails'
 gem 'rswag'
 gem 'rubocop-rails', require: false
+gem 'carrierwave', '~> 3.0'
