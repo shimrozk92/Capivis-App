@@ -14,6 +14,7 @@ module Api
         def create
           super do |resource|
             if resource.persisted?
+              UserMailer.welcome_email(resource).deliver_later
               if params[:user][:profileable_type].present?
                 create_profileable(resource)
               end
@@ -24,7 +25,7 @@ module Api
         private
 
         def configure_permitted_parameters
-          devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :birthdate, :address_line_1, :photo, :profileable_type])
+          devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :state, :country, :birthdate, :address_line_1, :photo, :profileable_type])
         end
 
         def respond_with(current_user, _opts = {})

@@ -7,7 +7,7 @@ module Api
       def index
         @donors = Donor.includes(:user).all
 
-        render json: @donors.as_json(include: { user: { only: [:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :address_line_1, :photo, :birthdate] } })
+        render json: @donors.as_json(include: { user: { only: [:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :state, :country, :address_line_1, :photo, :birthdate] } })
       end
 
       def show
@@ -38,7 +38,6 @@ module Api
       end
 
       def register
-        debugger
         @donor = current_user.profileable
 
         if @donor.update(register_params)
@@ -74,7 +73,7 @@ module Api
       end
 
       def user_fields
-        current_user.slice(:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :country, :birthdate, :address_line_1, :photo)
+        current_user.slice(:first_name, :last_name, :ssn_id, :role, :phone_number, :city, :state, :country, :birthdate, :address_line_1, :photo)
       end
     end
   end
