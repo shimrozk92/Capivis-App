@@ -14,7 +14,6 @@ module Api
         def create
           super do |resource|
             if resource.persisted?
-              UserMailer.welcome_email(resource).deliver_later
               if params[:user][:profileable_type].present?
                 create_profileable(resource)
               end
@@ -47,12 +46,8 @@ module Api
 
           profileable_class = profileable_type.constantize
           profileable = profileable_class.new(profileable_params)
+
           if profileable.save
-
-            if profileable.is_a?(Donor) && params[:profileable][:finger_print].present?
-              profileable.store_fingerprint(params[:profileable][:finger_print])
-            end
-
             user.profileable = profileable
             unless user.save
               render json: {
