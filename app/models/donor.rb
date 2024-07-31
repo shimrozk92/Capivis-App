@@ -11,6 +11,16 @@ class Donor < ApplicationRecord
   validate :check_potential_fraud
   before_validation :check_for_fraudulent_address
 
+  def store_fingerprint(fingerprint_data)
+    self.finger_print = BCrypt::Password.create(fingerprint_data)
+    save
+  end
+
+  def authenticate_fingerprint(fingerprint_data)
+    return false unless finger_print
+    BCrypt::Password.new(finger_print) == fingerprint_data
+  end
+
   private
 
   def check_potential_fraud

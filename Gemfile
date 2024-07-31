@@ -23,7 +23,7 @@ gem 'puma', '>= 5.0'
 # gem "kredis"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mswin mswin64 mingw x64_mingw jruby]
@@ -45,6 +45,8 @@ end
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem 'letter_opener'
+  gem 'letter_opener_web'
 end
 gem 'cancancan'
 gem 'devise'
@@ -58,3 +60,5 @@ gem 'rspec-rails'
 gem 'rswag'
 gem 'rubocop-rails', require: false
 gem 'carrierwave', '~> 3.0'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
