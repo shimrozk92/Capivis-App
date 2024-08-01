@@ -3,5 +3,9 @@
 # Serializer for the User model.
 class UserSerializer
   include JSONAPI::Serializer
-  attributes :id, :email, :first_name,:last_name, :ssn_id, :role, :phone_number, :city, :state, :country, :address_line_1, :birthdate, :photo, :profileable_id, :profileable_type
+  attributes :id, :email, :first_name,:last_name, :ssn_id, :role, :phone_number, :city, :state, :country, :address_line_1, :birthdate, :photo, :profileable_id, :profileable_type, :zipcode
+
+  attribute :zipcode do |user|
+    user.profileable_type == 'Donor' ? user.profileable.zipcode : nil
+  end
 end
