@@ -80,27 +80,27 @@ module Api
         if !screening.donor_weight.to_f.between?(110, 400)
           @donor_screening.status = "deferred"
           @donor_screening.save
-          render json: { error: "Donor out of weight limits" }, status: :unprocessable_entity
+          render json: { error: "Donor out of weight limits", status: @donor_screening.status }, status: :unprocessable_entity
         elsif !screening.donor_temperature.to_f.between?(96.0, 99.5)
           @donor_screening.status = "deferred"
           @donor_screening.save
-          render json: { error: "Donor out of temperature limits" }, status: :unprocessable_entity
+          render json: { error: "Donor out of temperature limits", status: @donor_screening.status }, status: :unprocessable_entity
         elsif !screening.hematocrit.to_i.between?(38, 54)
           @donor_screening.status = "deferred"
           @donor_screening.save
-          render json: { error: "Donor out of hematocrit limits" }, status: :unprocessable_entity
+          render json: { error: "Donor out of hematocrit limits", status: @donor_screening.status }, status: :unprocessable_entity
         elsif !screening.total_protein.to_f.between?(6.0, 9.0)
           @donor_screening.status = "deferred"
           @donor_screening.save
-          render json: { error: "Donor out of total protein limits" }, status: :unprocessable_entity
+          render json: { error: "Donor out of total protein limits", status: @donor_screening.status }, status: :unprocessable_entity
         elsif !screening.donor_blood_pressure.to_i.between?(90, 180)
           @donor_screening.status = "requires_retake"
           @donor_screening.save
-          render json: { warning: "Donor blood pressure requires retake" }, status: :accepted
+          render json: { warning: "Donor blood pressure requires retake", status: @donor_screening.status }, status: :accepted
         else
           @donor_screening.status = "out_of_limits"
           @donor_screening.save
-          render json: { error: "Donor out of limits" }, status: :unprocessable_entity
+          render json: { error: "Donor out of limits", status: @donor_screening.status }, status: :unprocessable_entity
         end
       end
     end
