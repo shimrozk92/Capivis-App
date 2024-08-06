@@ -1,7 +1,7 @@
 module Api
   module V1
     class DonorScreeningsController < ApplicationController
-      before_action :set_donor, only: [:create]
+      before_action :set_donor, only: [:create, :index]
       before_action :set_donor_screening, only: [:show, :update, :destroy]
       load_and_authorize_resource
 
