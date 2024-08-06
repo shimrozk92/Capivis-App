@@ -2,9 +2,10 @@ module Api
   module V1
     class DonorQuestionnairesController < ApplicationController
       before_action :set_donor_questionnaire, only: [:show, :update, :destroy]
+      before_action :set_donor, only: [:index]
 
       def index
-        @donor_questionnaires = DonorQuestionnaire.all
+        @donor_questionnaires = @donor.donor_questionnaires
         render json: @donor_questionnaires.map { |dq| donor_questionnaire_json(dq) }
       end
 
@@ -36,6 +37,10 @@ module Api
       end
 
       private
+
+      def set_donor
+        @donor = Donor.find(params[:donor_id])
+      end
 
       def set_donor_questionnaire
         @donor_questionnaire = DonorQuestionnaire.find(params[:id])

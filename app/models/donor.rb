@@ -1,6 +1,6 @@
 class Donor < ApplicationRecord
   has_one :user, as: :profileable
-  has_many :donor_questionnaire
+  has_many :donor_questionnaires, dependent: :destroy
   has_many :donor_physical_exams
   # belongs_to :center
   has_many :donor_screenings, dependent: :destroy
