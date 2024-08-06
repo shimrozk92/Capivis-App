@@ -6,7 +6,7 @@ module Api
       load_and_authorize_resource
 
       def index
-        @donor_screenings = DonorScreening.all
+        @donor_screenings = @donor.donor_screenings
         render json: @donor_screenings
       end
 
