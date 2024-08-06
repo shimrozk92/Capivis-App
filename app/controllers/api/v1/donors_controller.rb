@@ -11,7 +11,7 @@ module Api
       end
 
       def show
-        render json: @donor.attributes.merge(@donor&.user), status: :ok
+        render json: @donor.attributes.merge(@donor.user&.attributes || {}), status: :ok
       end
 
       def create
