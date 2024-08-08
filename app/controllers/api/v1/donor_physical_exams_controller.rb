@@ -80,7 +80,9 @@
 						musculoskeletals_attributes: [:result, :comments],
 						lymphatics_attributes: [:result, :comments],
 						neurologicals_attributes: [:result, :comments],
-						mental_statuses_attributes: [:result, :comments]
+						mental_statuses_attributes: [:result, :comments],
+						donor_information_flip_chart_attributes: [:result],
+						consent_for_plasmapheresis_attributes: [:result]
 						)
 				end
 			end
