@@ -36,6 +36,6 @@ class FraudAddressDataController < ApplicationController
   end
 
   def fraud_address_data_params
-    params.permit(:address, :city, :state, :zip_code)
+    params.permit(:address_line_1, :city, :state, :zip_code)
   end
 end

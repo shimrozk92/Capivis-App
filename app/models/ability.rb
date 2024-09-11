@@ -11,7 +11,7 @@ class Ability
 
     if user.admin?
       can :manage, :all
-    elsif user.oprator?
+    elsif user.operator?
       can :manage, DonorScreening
       can :manage, Donor
     elsif user.donor?
